@@ -12,7 +12,7 @@ import (
 func generateIssueBody(report Report) string {
 	var body string
 	for _, element := range report.Outdated.Dependencies {
-		body += fmt.Sprintf("* [ ] %v:%v:%v\n", element.Group, element.Name, element.Available.Release)
+		body += fmt.Sprintf("* [ ] `%v:%v:%v`\n", element.Group, element.Name, element.Available.Release)
 	}
 	return body
 }
