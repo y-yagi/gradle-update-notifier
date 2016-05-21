@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -17,7 +16,7 @@ func generateIssueBody(report Report) string {
 	return body
 }
 
-func reportToGithub(report Report, githubAccessToken string, repository string) error {
+func reportToGithub(report Report, githubAccessToken, userName, repositoryName string) error {
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: githubAccessToken},
 	)
@@ -29,9 +28,7 @@ func reportToGithub(report Report, githubAccessToken string, repository string) 
 	body := generateIssueBody(report)
 	issueRequest := &github.IssueRequest{Title: &title, Body: &body}
 
-	splitedRepository := strings.Split(repository, "/")
-
-	_, _, err := client.Issues.Create(splitedRepository[0], splitedRepository[1], issueRequest)
+	_, _, err := client.Issues.Create(userName, repositoryName, issueRequest)
 	if err != nil {
 		return err
 	}

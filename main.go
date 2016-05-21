@@ -17,11 +17,16 @@ func main() {
 		log.Fatal("Please set 'GITHUB_ACCESS_TOKEN' env")
 	}
 
-	var repository = flag.String("repository", "", "repository name")
+	var userName = flag.String("user", "", "GitHub user name")
+	var repositoryName = flag.String("repository", "", "GitHub repository name")
 	var reportPath = flag.String("report", "", "report file path")
 	flag.Parse()
 
-	if *repository == "" {
+	if *userName == "" {
+		log.Fatal("Please specifiy user name.")
+	}
+
+	if *repositoryName == "" {
 		log.Fatal("Please specifiy repository name.")
 	}
 
@@ -34,7 +39,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = reportToGithub(report, githubAccessToken, *repository)
+	err = reportToGithub(report, githubAccessToken, *userName, *repositoryName)
 	if err != nil {
 		log.Fatal(err)
 	}
