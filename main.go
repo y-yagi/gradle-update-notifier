@@ -2,14 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
 	"os"
 )
-
-func usage() {
-	fmt.Fprintf(os.Stderr, "usage: %s PATTERN\n", os.Args[0])
-}
 
 func main() {
 	githubAccessToken := os.Getenv("GITHUB_ACCESS_TOKEN")
