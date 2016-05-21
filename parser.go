@@ -1,10 +1,6 @@
 package main
 
-import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
-)
+import "encoding/json"
 
 type Available struct {
 	Release     string
@@ -32,21 +28,10 @@ type Report struct {
 	Count      int
 }
 
-func parse(filePath string) (Report, error) {
+func parse(reportData []byte) (Report, error) {
 	var report Report
 
-	reader, err := os.Open(filePath)
-	if err != nil {
-		return report, err
-	}
-
-	jsonStr, err := ioutil.ReadAll(reader)
-	if err != nil {
-		return report, err
-	}
-
-	err = json.Unmarshal([]byte(jsonStr), &report)
-
+	err := json.Unmarshal([]byte(reportData), &report)
 	if err != nil {
 		return report, err
 	}

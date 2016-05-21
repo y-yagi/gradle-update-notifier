@@ -12,9 +12,13 @@ func main() {
 		log.Fatal("Please set 'GITHUB_ACCESS_TOKEN' env")
 	}
 
+	circleciApiToken := os.Getenv("CIRCLECI_API_TOKEN")
+	if circleciApiToken == "" {
+		log.Fatal("Please set 'CIRCLECI_API_TOKEN' env")
+	}
+
 	var userName = flag.String("user", "", "GitHub user name")
 	var repositoryName = flag.String("repository", "", "GitHub repository name")
-	var reportPath = flag.String("report", "", "report file path")
 	flag.Parse()
 
 	if *userName == "" {
@@ -25,17 +29,18 @@ func main() {
 		log.Fatal("Please specifiy repository name.")
 	}
 
-	if *reportPath == "" {
-		log.Fatal("Please specifiy report file path.")
+	reportData, err := readReportFileFromCircleCI(circleciApiToken, *userName, *repositoryName)
+	if err != nil {
+		log.Fatal("Report fetch error: ", err)
 	}
 
-	report, err := parse(*reportPath)
+	report, err := parse(reportData)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("JSON parse error: ", err)
 	}
 
 	err = reportToGithub(report, githubAccessToken, *userName, *repositoryName)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Report error: ", err)
 	}
 }
