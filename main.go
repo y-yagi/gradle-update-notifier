@@ -4,9 +4,18 @@ import (
 	"flag"
 	"log"
 	"os"
+	"time"
 )
 
 func main() {
+	weekday := os.Getenv("WEEKDAY")
+	if weekday != "" {
+		if string(time.Now().Weekday()) != weekday {
+			// Do nothing.
+			return
+		}
+	}
+
 	githubAccessToken := os.Getenv("GITHUB_ACCESS_TOKEN")
 	if githubAccessToken == "" {
 		log.Fatal("Please set 'GITHUB_ACCESS_TOKEN' env")
