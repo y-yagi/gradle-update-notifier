@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
 	"os"
 	"time"
 )
@@ -18,12 +18,14 @@ func main() {
 
 	githubAccessToken := os.Getenv("GITHUB_ACCESS_TOKEN")
 	if githubAccessToken == "" {
-		log.Fatal("Please set 'GITHUB_ACCESS_TOKEN' env")
+		fmt.Println("Please set 'GITHUB_ACCESS_TOKEN' env")
+		os.Exit(1)
 	}
 
 	circleciApiToken := os.Getenv("CIRCLECI_API_TOKEN")
 	if circleciApiToken == "" {
-		log.Fatal("Please set 'CIRCLECI_API_TOKEN' env")
+		fmt.Println("Please set 'CIRCLECI_API_TOKEN' env")
+		os.Exit(1)
 	}
 
 	var userName = flag.String("user", "", "GitHub user name")
@@ -31,25 +33,30 @@ func main() {
 	flag.Parse()
 
 	if *userName == "" {
-		log.Fatal("Please specifiy user name.")
+		fmt.Println("Please specifiy user name.")
+		os.Exit(1)
 	}
 
 	if *repositoryName == "" {
-		log.Fatal("Please specifiy repository name.")
+		fmt.Println("Please specifiy repository name.")
+		os.Exit(1)
 	}
 
 	reportData, err := readReportFileFromCircleCI(circleciApiToken, *userName, *repositoryName)
 	if err != nil {
-		log.Fatal("Report fetch error: ", err)
+		fmt.Println("Report fetch error: ", err)
+		os.Exit(1)
 	}
 
 	report, err := parse(reportData)
 	if err != nil {
-		log.Fatal("JSON parse error: ", err)
+		fmt.Println("JSON parse error: ", err)
+		os.Exit(1)
 	}
 
 	err = reportToGithub(report, githubAccessToken, *userName, *repositoryName)
 	if err != nil {
-		log.Fatal("Report error: ", err)
+		fmt.Println("Report error: ", err)
+		os.Exit(1)
 	}
 }
