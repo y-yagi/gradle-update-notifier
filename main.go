@@ -1,62 +1,94 @@
 package main
 
 import (
-	"flag"
-	"fmt"
+	"errors"
 	"os"
 	"time"
+
+	"github.com/codegangsta/cli"
 )
 
+func checkRequiredArguments(c *cli.Context) error {
+	if c.String("user") == "" {
+		return errors.New("Please set user name.")
+	}
+	if c.String("repository") == "" {
+		return errors.New("Please set repository name.")
+	}
+	if c.String("github_access_token") == "" {
+		return errors.New("Please set GitHub access token.")
+	}
+	if c.String("circleci_api_token") == "" {
+		return errors.New("Please set CircleCI API token.")
+	}
+
+	return nil
+}
+
 func main() {
-	weekday := os.Getenv("WEEKDAY")
-	if weekday != "" {
-		if string(time.Now().Weekday()) != weekday {
-			// Do nothing.
-			return
+	app := cli.NewApp()
+	app.Name = "gradle-update-notifier"
+	app.Usage = "notify gradle update"
+	app.Flags = []cli.Flag{
+		cli.StringFlag{
+			Name:  "user, u",
+			Value: "",
+			Usage: "GitHub user name",
+		},
+		cli.StringFlag{
+			Name:  "repository, r",
+			Value: "",
+			Usage: "GitHub repository name",
+		},
+		cli.StringFlag{
+			Name:   "weekday",
+			Value:  "",
+			Usage:  "Weekday of run the command('Sunday', 'Monday', ...)",
+			EnvVar: "WEEKDAY",
+		},
+		cli.StringFlag{
+			Name:   "github_access_token",
+			Value:  "",
+			Usage:  "GitHub access token",
+			EnvVar: "GITHUB_ACCESS_TOKEN",
+		},
+		cli.StringFlag{
+			Name:   "circleci_api_token",
+			Value:  "",
+			Usage:  "CiecleCI API token",
+			EnvVar: "CIRCLECI_API_TOKEN",
+		},
+	}
+
+	app.Action = func(c *cli.Context) error {
+		weekday := c.String("weekday")
+		if weekday != "" {
+			if string(time.Now().Weekday()) != weekday {
+				return nil
+			}
 		}
+		err := checkRequiredArguments(c)
+		if err != nil {
+			return cli.NewExitError(err.Error(), 1)
+		}
+
+		reportData, err := readReportFileFromCircleCI(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
+		if err != nil {
+			return cli.NewExitError("Report fetch error: "+err.Error(), 1)
+		}
+
+		report, err := parse(reportData)
+		if err != nil {
+			return cli.NewExitError("JSON parse error: "+err.Error(), 1)
+		}
+
+		err = reportToGithub(report, c.String("github_access_token"), c.String("user"), c.String("repository"))
+		if err != nil {
+			return cli.NewExitError("Report error: "+err.Error(), 1)
+		}
+		return nil
+
 	}
 
-	githubAccessToken := os.Getenv("GITHUB_ACCESS_TOKEN")
-	if githubAccessToken == "" {
-		fmt.Println("Please set 'GITHUB_ACCESS_TOKEN' env")
-		os.Exit(1)
-	}
-
-	circleciApiToken := os.Getenv("CIRCLECI_API_TOKEN")
-	if circleciApiToken == "" {
-		fmt.Println("Please set 'CIRCLECI_API_TOKEN' env")
-		os.Exit(1)
-	}
-
-	var userName = flag.String("user", "", "GitHub user name")
-	var repositoryName = flag.String("repository", "", "GitHub repository name")
-	flag.Parse()
-
-	if *userName == "" {
-		fmt.Println("Please specifiy user name.")
-		os.Exit(1)
-	}
-
-	if *repositoryName == "" {
-		fmt.Println("Please specifiy repository name.")
-		os.Exit(1)
-	}
-
-	reportData, err := readReportFileFromCircleCI(circleciApiToken, *userName, *repositoryName)
-	if err != nil {
-		fmt.Println("Report fetch error: ", err)
-		os.Exit(1)
-	}
-
-	report, err := parse(reportData)
-	if err != nil {
-		fmt.Println("JSON parse error: ", err)
-		os.Exit(1)
-	}
-
-	err = reportToGithub(report, githubAccessToken, *userName, *repositoryName)
-	if err != nil {
-		fmt.Println("Report error: ", err)
-		os.Exit(1)
-	}
+	app.Run(os.Args)
 }
