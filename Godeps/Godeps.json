@@ -1,11 +1,13 @@
 {
-	"ImportPath": "github.com/y-yagi/gradle-update-notification",
+	"ImportPath": "github.com/y-yagi/gradle-update-notifier",
 	"GoVersion": "go1.6",
 	"GodepVersion": "v62",
-	"Packages": [
-		"./..."
-	],
 	"Deps": [
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "v1.17.0-16-g7f0ca9a",
+			"Rev": "7f0ca9a34958d6702ac8f38530d19001fa5b1560"
+		},
 		{
 			"ImportPath": "github.com/google/go-github/github",
 			"Rev": "a68a8707f3c18a3a47bb0975ca29a9239792dc01"
