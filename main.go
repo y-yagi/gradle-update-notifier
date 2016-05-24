@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -64,6 +65,7 @@ func main() {
 		weekday := c.String("weekday")
 		if weekday != "" {
 			if string(time.Now().Weekday()) != weekday {
+				fmt.Printf("Today is %s. It is set to be executed in %s.\n", time.Now().Weekday(), weekday)
 				return nil
 			}
 		}
