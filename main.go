@@ -63,9 +63,10 @@ func main() {
 
 	app.Action = func(c *cli.Context) error {
 		weekday := c.String("weekday")
+		today := time.Now().Weekday().String()
 		if weekday != "" {
-			if string(time.Now().Weekday()) != weekday {
-				fmt.Printf("Today is %s. It is set to be executed in %s.\n", time.Now().Weekday(), weekday)
+			if today != weekday {
+				fmt.Printf("Today is %s. It is set to be executed in %s.\n", today, weekday)
 				return nil
 			}
 		}
