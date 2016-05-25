@@ -1,6 +1,10 @@
 package main
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/pkg/errors"
+)
 
 type Available struct {
 	Release     string
@@ -33,7 +37,7 @@ func parse(reportData []byte) (Report, error) {
 
 	err := json.Unmarshal([]byte(reportData), &report)
 	if err != nil {
-		return report, err
+		return report, errors.Wrap(err, "JSON parse failed")
 	}
 
 	return report, nil

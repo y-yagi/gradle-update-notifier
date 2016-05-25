@@ -77,17 +77,17 @@ func main() {
 
 		reportData, err := readReportFileFromCircleCI(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
 		if err != nil {
-			return cli.NewExitError("Report fetch error: "+err.Error(), 1)
+			return cli.NewExitError(err.Error(), 1)
 		}
 
 		report, err := parse(reportData)
 		if err != nil {
-			return cli.NewExitError("JSON parse error: "+err.Error(), 1)
+			return cli.NewExitError(err.Error(), 1)
 		}
 
 		err = reportToGithub(report, c.String("github_access_token"), c.String("user"), c.String("repository"))
 		if err != nil {
-			return cli.NewExitError("Report error: "+err.Error(), 1)
+			return cli.NewExitError(err.Error(), 1)
 		}
 		return nil
 

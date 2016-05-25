@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type Artifact struct {
@@ -25,7 +27,7 @@ func readReportFileFromCircleCI(apiToken, userName, repositoryName string) ([]by
 	req.Header.Add("Accept", "application/json")
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "artifacts API failed")
 	}
 
 	var artifacts []Artifact
@@ -34,13 +36,13 @@ func readReportFileFromCircleCI(apiToken, userName, repositoryName string) ([]by
 	err = decoder.Decode(&artifacts)
 	if err != nil {
 		resp.Body.Close()
-		return nil, err
+		return nil, errors.Wrap(err, "artifacts API response parse failed")
 	}
 	resp.Body.Close()
 
 	resp, err = http.Get(artifacts[0].Url)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "artifacts get failed")
 	}
 
 	defer resp.Body.Close()

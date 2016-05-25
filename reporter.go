@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
+	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 )
 
@@ -30,7 +31,7 @@ func reportToGithub(report Report, githubAccessToken, userName, repositoryName s
 
 	_, _, err := client.Issues.Create(userName, repositoryName, issueRequest)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "issue create failed")
 	}
 	return nil
 }
