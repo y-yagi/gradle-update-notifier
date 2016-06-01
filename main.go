@@ -26,11 +26,8 @@ func checkRequiredArguments(c *cli.Context) error {
 	return nil
 }
 
-func main() {
-	app := cli.NewApp()
-	app.Name = "gradle-update-notifier"
-	app.Usage = "notify gradle update"
-	app.Flags = []cli.Flag{
+func commandFlags() []cli.Flag {
+	return []cli.Flag{
 		cli.StringFlag{
 			Name:  "user, u",
 			Value: "",
@@ -60,6 +57,13 @@ func main() {
 			EnvVar: "CIRCLECI_API_TOKEN",
 		},
 	}
+}
+
+func main() {
+	app := cli.NewApp()
+	app.Name = "gradle-update-notifier"
+	app.Usage = "notify gradle update"
+	app.Flags = commandFlags()
 
 	app.Action = func(c *cli.Context) error {
 		weekday := c.String("weekday")
@@ -93,5 +97,23 @@ func main() {
 
 	}
 
+	app.Commands = []cli.Command{
+		{
+			Name:  "build",
+			Usage: "Triggers a new CircleCI build",
+			Flags: commandFlags(),
+			Action: func(c *cli.Context) error {
+				err := checkRequiredArguments(c)
+				if err != nil {
+					return cli.NewExitError(err.Error(), 1)
+				}
+				err = triggerBuild(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
+				if err != nil {
+					return cli.NewExitError(err.Error(), 1)
+				}
+				return nil
+			},
+		},
+	}
 	app.Run(os.Args)
 }
