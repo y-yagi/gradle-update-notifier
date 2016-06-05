@@ -94,7 +94,6 @@ func main() {
 			return cli.NewExitError(err.Error(), 1)
 		}
 		return nil
-
 	}
 
 	app.Commands = []cli.Command{

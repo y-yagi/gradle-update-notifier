@@ -18,15 +18,20 @@ func generateIssueBody(report Report) string {
 }
 
 func reportToGithub(report Report, githubAccessToken, userName, repositoryName string) error {
+	body := generateIssueBody(report)
+	if len(body) == 0 {
+		// No libraries need to update
+		return nil
+	}
+
+	currentTime := time.Now()
+	title := "dependency-updates-" + currentTime.Format("20060102150405")
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: githubAccessToken},
 	)
 	tc := oauth2.NewClient(oauth2.NoContext, ts)
 	client := github.NewClient(tc)
 
-	currentTime := time.Now()
-	title := "dependency-updates-" + currentTime.Format("20060102150405")
-	body := generateIssueBody(report)
 	issueRequest := &github.IssueRequest{Title: &title, Body: &body}
 
 	_, _, err := client.Issues.Create(userName, repositoryName, issueRequest)
