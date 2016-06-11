@@ -1,0 +1,11 @@
+{
+  "name": "gradle-update-notification*",
+  "repository": "https://github.com/y-yagi/gradle-update-notification",
+  "env": {
+    "GITHUB_ACCESS_TOKEN": "",
+    "CIRCLECI_API_TOKEN": ""
+  },
+  "addons": [
+    "scheduler:standard"
+  ]
+}
