@@ -63,6 +63,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "gradle-update-notifier"
 	app.Usage = "notify gradle update"
+	app.Version = "0.1.0"
 	app.Flags = commandFlags()
 
 	app.Action = func(c *cli.Context) error {
