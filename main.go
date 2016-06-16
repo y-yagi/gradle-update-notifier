@@ -1,12 +1,13 @@
 package main
 
 import (
-	"errors"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"time"
 
 	"github.com/codegangsta/cli"
+	"github.com/pkg/errors"
 )
 
 func checkRequiredArguments(c *cli.Context) error {
@@ -18,9 +19,6 @@ func checkRequiredArguments(c *cli.Context) error {
 	}
 	if c.String("github_access_token") == "" {
 		return errors.New("Please set GitHub access token.")
-	}
-	if c.String("circleci_api_token") == "" {
-		return errors.New("Please set CircleCI API token.")
 	}
 
 	return nil
@@ -37,6 +35,11 @@ func commandFlags() []cli.Flag {
 			Name:  "repository, r",
 			Value: "",
 			Usage: "GitHub repository name",
+		},
+		cli.StringFlag{
+			Name:  "report_file, f",
+			Value: "",
+			Usage: "The generated JSON file in Gradle Versions Plugin.",
 		},
 		cli.StringFlag{
 			Name:   "weekday",
@@ -69,6 +72,7 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		weekday := c.String("weekday")
 		today := time.Now().Weekday().String()
+		var reportData []byte
 		if weekday != "" {
 			if today != weekday {
 				fmt.Printf("Today is %s. It is set to be executed in %s.\n", today, weekday)
@@ -80,9 +84,20 @@ func main() {
 			return cli.NewExitError(err.Error(), 1)
 		}
 
-		reportData, err := readReportFileFromCircleCI(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
-		if err != nil {
-			return cli.NewExitError(err.Error(), 1)
+		if c.String("report_file") == "" {
+			if c.String("circleci_api_token") == "" {
+				return cli.NewExitError("Please set CircleCI API token.", 1)
+			}
+
+			reportData, err = readReportFileFromCircleCI(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
+			if err != nil {
+				return cli.NewExitError(err.Error(), 1)
+			}
+		} else {
+			reportData, err = ioutil.ReadFile(c.String("report_file"))
+			if err != nil {
+				return cli.NewExitError(errors.Wrap(err, "report file read error").Error(), 1)
+			}
 		}
 
 		report, err := parse(reportData)
