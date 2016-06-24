@@ -2,7 +2,7 @@
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
-`gradle-update-notifier` creates a report made by [Gradle Versions Plugin](https://github.com/ben-manes/gradle-versions-plugin/)to GitHub issue.
+`gradle-update-notifier` creates a GitHub issue with result of [Gradle Versions Plugin](https://github.com/ben-manes/gradle-versions-plugin/).
 
 ## Installation
 
