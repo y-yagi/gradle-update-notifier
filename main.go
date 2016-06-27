@@ -137,6 +137,10 @@ func main() {
 					return cli.NewExitError(err.Error(), 1)
 				}
 
+				if c.String("circleci_api_token") == "" {
+					return cli.NewExitError("Please set CircleCI API token.", 1)
+				}
+
 				err = triggerBuild(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
 				if err != nil {
 					return cli.NewExitError(err.Error(), 1)
