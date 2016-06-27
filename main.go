@@ -62,6 +62,14 @@ func commandFlags() []cli.Flag {
 	}
 }
 
+func isRunDay(today, weekday string) bool {
+	if weekday == "" || today == weekday {
+		return true
+	} else {
+		return false
+	}
+}
+
 func main() {
 	app := cli.NewApp()
 	app.Name = "gradle-update-notifier"
@@ -72,18 +80,17 @@ func main() {
 	app.Action = func(c *cli.Context) error {
 		weekday := c.String("weekday")
 		today := time.Now().Weekday().String()
-		var reportData []byte
-		if weekday != "" {
-			if today != weekday {
-				fmt.Printf("Today is %s. It is set to be executed in %s.\n", today, weekday)
-				return nil
-			}
+		if !isRunDay(today, weekday) {
+			fmt.Printf("Today is %s. It is set to be executed in %s.\n", today, weekday)
+			return nil
 		}
+
 		err := checkRequiredArguments(c)
 		if err != nil {
 			return cli.NewExitError(err.Error(), 1)
 		}
 
+		var reportData []byte
 		if c.String("report_file") == "" {
 			if c.String("circleci_api_token") == "" {
 				return cli.NewExitError("Please set CircleCI API token.", 1)
@@ -118,14 +125,23 @@ func main() {
 			Usage: "Triggers a new CircleCI build",
 			Flags: commandFlags(),
 			Action: func(c *cli.Context) error {
+				weekday := c.String("weekday")
+				today := time.Now().Weekday().String()
+				if !isRunDay(today, weekday) {
+					fmt.Printf("Today is %s. It is set to be executed in %s.\n", today, weekday)
+					return nil
+				}
+
 				err := checkRequiredArguments(c)
 				if err != nil {
 					return cli.NewExitError(err.Error(), 1)
 				}
+
 				err = triggerBuild(c.String("circleci_api_token"), c.String("user"), c.String("repository"))
 				if err != nil {
 					return cli.NewExitError(err.Error(), 1)
 				}
+
 				return nil
 			},
 		},
