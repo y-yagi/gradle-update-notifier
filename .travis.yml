@@ -1,0 +1,10 @@
+language: go
+
+go:
+  - 1.6
+
+install:
+  - go get github.com/codegangsta/cli
+  - go get github.com/pkg/errors
+  - go get github.com/google/go-github/github
+  - go get golang.org/x/oauth2
