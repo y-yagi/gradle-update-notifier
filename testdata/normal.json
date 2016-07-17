@@ -1,0 +1,70 @@
+{
+    "current": {
+        "dependencies": [
+            {
+                "group": "com.android.support",
+                "version": "24.0.0",
+                "name": "appcompat-v7"
+            },
+            {
+                "group": "com.android.support",
+                "version": "24.0.0",
+                "name": "design"
+            },
+            {
+                "group": "com.android.tools.build",
+                "version": "2.1.2",
+                "name": "gradle"
+            },
+            {
+                "group": "com.nbsp",
+                "version": "1.09",
+                "name": "library"
+            },
+            {
+                "group": "com.squareup.retrofit2",
+                "version": "2.1.0",
+                "name": "converter-gson"
+            },
+            {
+                "group": "com.squareup.retrofit2",
+                "version": "2.1.0",
+                "name": "retrofit"
+            },
+            {
+                "group": "junit",
+                "version": "4.12",
+                "name": "junit"
+            }
+        ],
+        "count": 7
+    },
+    "exceeded": {
+        "dependencies": [
+
+        ],
+        "count": 0
+    },
+    "outdated": {
+        "dependencies": [
+            {
+                "group": "com.github.ben-manes",
+                "available": {
+                    "release": "0.13.0",
+                    "milestone": null,
+                    "integration": null
+                },
+                "version": "0.12.0",
+                "name": "gradle-versions-plugin"
+            }
+        ],
+        "count": 1
+    },
+    "unresolved": {
+        "dependencies": [
+
+        ],
+        "count": 0
+    },
+    "count": 8
+}
