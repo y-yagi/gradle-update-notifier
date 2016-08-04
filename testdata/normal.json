@@ -56,9 +56,19 @@
                 },
                 "version": "0.12.0",
                 "name": "gradle-versions-plugin"
+            },
+            {
+                "group": "com.google.firebase",
+                "available": {
+                    "release": "9.4.0",
+                    "milestone": null,
+                    "integration": null
+                },
+                "version": "9.2.1",
+                "name": "firebase-core"
             }
         ],
-        "count": 1
+        "count": 2
     },
     "unresolved": {
         "dependencies": [
