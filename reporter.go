@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/go-github/github"
@@ -9,16 +10,37 @@ import (
 	"golang.org/x/oauth2"
 )
 
-func generateIssueBody(report Report) string {
+func generateIssueBody(report Report, releaseNotes []ReleaseNote) string {
 	var body string
-	for _, element := range report.Outdated.Dependencies {
-		body += fmt.Sprintf("* [ ] `%v:%v:%v`\n", element.Group, element.Name, element.Available.Release)
+	var dependency Dependency
+
+	for i := 0; i < len(report.Outdated.Dependencies); i++ {
+		dependency = report.Outdated.Dependencies[i]
+		body += fmt.Sprintf("* [ ] `%v:%v`", dependency.Pkg(), dependency.Available.Release)
+
+		if len(releaseNotes[i].Url) > 1 {
+			body += fmt.Sprintf("([Release Note](%v))\n", releaseNotes[i].Url)
+		} else {
+			body += "\n"
+		}
 	}
 	return body
 }
 
 func reportToGithub(report Report, githubAccessToken, userName, repositoryName string) error {
-	body := generateIssueBody(report)
+	var pkgs string
+	for _, dependency := range report.Outdated.Dependencies {
+		pkgs += dependency.Pkg() + ","
+	}
+	pkgs = strings.TrimRight(pkgs, ",")
+
+	releaseNotes, err := getReleaseNotes(pkgs)
+	if err != nil {
+		return err
+	}
+
+	body := generateIssueBody(report, releaseNotes)
+
 	if len(body) == 0 {
 		// No libraries need to update
 		return nil
@@ -34,7 +56,7 @@ func reportToGithub(report Report, githubAccessToken, userName, repositoryName s
 
 	issueRequest := &github.IssueRequest{Title: &title, Body: &body}
 
-	_, _, err := client.Issues.Create(userName, repositoryName, issueRequest)
+	_, _, err = client.Issues.Create(userName, repositoryName, issueRequest)
 	if err != nil {
 		return errors.Wrap(err, "issue create failed")
 	}
