@@ -12,8 +12,8 @@ func TestParseSuccess(t *testing.T) {
 		t.Errorf("Get error: %v", err)
 	}
 
-	if len(report.Outdated.Dependencies) != 1 {
-		t.Errorf("Expect %v, but %v", 1, len(report.Outdated.Dependencies))
+	if len(report.Outdated.Dependencies) != 2 {
+		t.Errorf("Expect %v, but %v", 2, len(report.Outdated.Dependencies))
 	}
 }
 

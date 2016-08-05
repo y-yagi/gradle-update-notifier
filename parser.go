@@ -42,3 +42,7 @@ func parse(reportData []byte) (Report, error) {
 
 	return report, nil
 }
+
+func (dependency *Dependency) Pkg() string {
+	return dependency.Group + ":" + dependency.Name
+}
