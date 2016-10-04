@@ -7,7 +7,7 @@
 ## Installation
 
 ```sh
-$ go get y-yagi/gradle-update-notifier
+$ go get github.com/y-yagi/gradle-update-notifier
 ```
 
 ## Usage
