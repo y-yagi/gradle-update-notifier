@@ -6,12 +6,14 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Available is type for android library
 type Available struct {
 	Release     string
 	Milestone   string
 	Integration string
 }
 
+// Dependency is type for android library
 type Dependency struct {
 	Group     string
 	Version   string
@@ -19,11 +21,13 @@ type Dependency struct {
 	Name      string
 }
 
+// Item is type for android library
 type Item struct {
 	Dependencies []Dependency
 	count        int
 }
 
+// Report is type for android library status
 type Report struct {
 	Current    Item
 	Exceeded   Item
@@ -43,6 +47,7 @@ func parse(reportData []byte) (Report, error) {
 	return report, nil
 }
 
+// Pkg retrun full pkg name
 func (dependency *Dependency) Pkg() string {
 	return dependency.Group + ":" + dependency.Name
 }
