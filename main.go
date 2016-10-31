@@ -65,9 +65,8 @@ func commandFlags() []cli.Flag {
 func isRunDay(today, weekday string) bool {
 	if weekday == "" || today == weekday {
 		return true
-	} else {
-		return false
 	}
+	return false
 }
 
 func main() {
