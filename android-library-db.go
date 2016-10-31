@@ -8,18 +8,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+// ReleaseNote is strcut for library release info
 type ReleaseNote struct {
 	Package string
-	Url     string
+	URL     string
 }
-
-const ANDROID_LIBRARY_DB_API = "https://android-library-db.herokuapp.com"
 
 func getReleaseNotes(pkgs string) ([]ReleaseNote, error) {
 	var releaseNotes []ReleaseNote
+	var androidLibraryDBAPI = "https://android-library-db.herokuapp.com"
 
 	client := &http.Client{}
-	url := fmt.Sprintf(ANDROID_LIBRARY_DB_API+"/release_notes?packages=%v", pkgs)
+	url := fmt.Sprintf(androidLibraryDBAPI+"/release_notes?packages=%v", pkgs)
 
 	req, err := http.NewRequest("GET", url, nil)
 	req.Header.Add("Accept", "application/json")

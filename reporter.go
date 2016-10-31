@@ -18,8 +18,8 @@ func generateIssueBody(report Report, releaseNotes []ReleaseNote) string {
 		dependency = report.Outdated.Dependencies[i]
 		body += fmt.Sprintf("* [ ] `%v:%v`", dependency.Pkg(), dependency.Available.Release)
 
-		if len(releaseNotes[i].Url) > 1 {
-			body += fmt.Sprintf("([Release Note](%v))\n", releaseNotes[i].Url)
+		if len(releaseNotes[i].URL) > 1 {
+			body += fmt.Sprintf("([Release Note](%v))\n", releaseNotes[i].URL)
 		} else {
 			body += "\n"
 		}
