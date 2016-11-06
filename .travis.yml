@@ -8,3 +8,8 @@ install:
   - go get github.com/pkg/errors
   - go get github.com/google/go-github/github
   - go get golang.org/x/oauth2
+  - go get github.com/golang/lint/golint
+
+before_script:
+  - go vet .
+  - golint .
