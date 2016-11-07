@@ -1,4 +1,4 @@
-# gradle-update-notifier
+# gradle-update-notifier [![Build](https://travis-ci.org/y-yagi/gradle-update-notifier.svg?branch=master)](https://travis-ci.org/y-yagi/gradle-update-notifier)
 
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
