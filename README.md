@@ -30,7 +30,7 @@ In addition, GitHub access token and CircleCI API token can specify in the envir
 
 ### Automatic execution
 
-`gradle-update-notifier` works in [Heroku](https://www.heroku.com/). By using in conjunction with ,[Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) it is possible to run on a regular basis.
+`gradle-update-notifier` works in [Heroku](https://www.heroku.com/). By using in conjunction with, [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler) it is possible to run on a regular basis.
 
 Heroku Scheduler supports 10 minutes, every hour, or every day only. If you want to run only once week, you can specify the day of the week to run in `weekday` option.
 
