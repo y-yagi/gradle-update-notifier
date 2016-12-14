@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"regexp"
 
 	"github.com/pkg/errors"
 )
@@ -36,12 +37,23 @@ type Report struct {
 	Count      int
 }
 
-func parse(reportData []byte) (Report, error) {
+func parse(reportData []byte, excludePattern *regexp.Regexp) (Report, error) {
 	var report Report
 
 	err := json.Unmarshal([]byte(reportData), &report)
 	if err != nil {
 		return report, errors.Wrap(err, "JSON parse failed")
+	}
+
+	if excludePattern != nil {
+		var dependencies []Dependency
+
+		for _, dependency := range report.Outdated.Dependencies {
+			if !excludePattern.MatchString(dependency.Pkg()) {
+				dependencies = append(dependencies, dependency)
+			}
+		}
+		report.Outdated.Dependencies = dependencies
 	}
 
 	return report, nil

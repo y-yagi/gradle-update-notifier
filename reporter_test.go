@@ -7,7 +7,7 @@ import (
 
 func TestGenerateIssueBody(t *testing.T) {
 	jsonData, _ := ioutil.ReadFile("testdata/normal.json")
-	report, _ := parse(jsonData)
+	report, _ := parse(jsonData, nil)
 	releaseNotes := []ReleaseNote{ReleaseNote{Package: "com.google.firebase:firebase-core", URL: "https://firebase.google.com/support/releases"}, ReleaseNote{Package: "com.github.ben-manes:gradle-version-plugin", URL: ""}}
 
 	issueBody := generateIssueBody(report, releaseNotes)

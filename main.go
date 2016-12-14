@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -54,6 +55,11 @@ func commandFlags() []cli.Flag {
 			EnvVar: "GITHUB_ACCESS_TOKEN",
 		},
 		cli.StringFlag{
+			Name:  "exclude, e",
+			Value: "",
+			Usage: "Exclude /regexp/ from report.",
+		},
+		cli.StringFlag{
 			Name:   "circleci_api_token",
 			Value:  "",
 			Usage:  "CiecleCI API token",
@@ -70,6 +76,9 @@ func isRunDay(today, weekday string) bool {
 }
 
 func main() {
+	var reportData []byte
+	var excludePattern *regexp.Regexp
+
 	app := cli.NewApp()
 	app.Name = "gradle-update-notifier"
 	app.Usage = "notify gradle update"
@@ -88,8 +97,13 @@ func main() {
 		if err != nil {
 			return cli.NewExitError(err.Error(), 1)
 		}
+		if c.String("exclude") != "" {
+			excludePattern, err = regexp.Compile(c.String("exclude"))
+			if err != nil {
+				return cli.NewExitError(err.Error(), 1)
+			}
+		}
 
-		var reportData []byte
 		if c.String("report_file") == "" {
 			if c.String("circleci_api_token") == "" {
 				return cli.NewExitError("Please set CircleCI API token.", 1)
@@ -106,7 +120,7 @@ func main() {
 			}
 		}
 
-		report, err := parse(reportData)
+		report, err := parse(reportData, excludePattern)
 		if err != nil {
 			return cli.NewExitError(err.Error(), 1)
 		}
