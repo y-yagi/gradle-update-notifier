@@ -23,7 +23,7 @@ In addition to the local file, you can also specify the artifact of [CircleCI](h
 Search for artifcat from the specified github user name and github repository. Instead of the file, you must specify the CircleCI API token.
 
 ```
-gradle-update-notifier -u <GitHub user name> -r <GitHub repository> --github_access_token <GitHub access token> --circleci_api_token <CiecleCI API token>
+gradle-update-notifier -u <GitHub user name> -r <GitHub repository> --github_access_token <GitHub access token> --circleci_api_token <CircleCI API token>
 ```
 In addition, GitHub access token and CircleCI API token can specify in the environment variable. For details, refer to help.
 
