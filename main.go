@@ -13,13 +13,13 @@ import (
 
 func checkRequiredArguments(c *cli.Context) error {
 	if c.String("user") == "" {
-		return errors.New("Please set user name.")
+		return errors.New("please set user name")
 	}
 	if c.String("repository") == "" {
-		return errors.New("Please set repository name.")
+		return errors.New("Please set repository name")
 	}
 	if c.String("github_access_token") == "" {
-		return errors.New("Please set GitHub access token.")
+		return errors.New("Please set GitHub access token")
 	}
 
 	return nil
