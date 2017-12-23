@@ -19,6 +19,8 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
+[metadata.heroku]
+  root-package = "github.com/y-yagi/gradle-update-notifier"
 
 [[constraint]]
   name = "github.com/codegangsta/cli"
