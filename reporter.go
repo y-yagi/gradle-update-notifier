@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
@@ -56,7 +57,8 @@ func reportToGithub(report Report, githubAccessToken, userName, repositoryName s
 
 	issueRequest := &github.IssueRequest{Title: &title, Body: &body}
 
-	_, _, err = client.Issues.Create(userName, repositoryName, issueRequest)
+	ctx := context.Background()
+	_, _, err = client.Issues.Create(ctx, userName, repositoryName, issueRequest)
 	if err != nil {
 		return errors.Wrap(err, "issue create failed")
 	}

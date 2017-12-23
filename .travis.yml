@@ -1,17 +1,13 @@
 language: go
 
 go:
-  - 1.7
-  - 1.8
-  - 1.9
+  - 1.9.x
 
 install:
-  - go get github.com/codegangsta/cli
-  - go get github.com/pkg/errors
-  - go get github.com/google/go-github/github
-  - go get golang.org/x/oauth2
-  - go get github.com/golang/lint/golint
+  - go get -u github.com/golang/lint/golint
+  - go get -u github.com/golang/dep/cmd/dep
+  - dep ensure
 
 before_script:
-  - go vet .
-  - golint .
+  - go vet $(go list ./... | grep -vF /vendor/)
+  - golint -set_exit_status $(go list ./... | grep -vF /vendor/)
